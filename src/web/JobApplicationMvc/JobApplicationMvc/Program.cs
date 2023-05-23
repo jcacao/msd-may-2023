@@ -14,6 +14,15 @@ builder.Services.AddDefaultIdentity<JobApplicationMvcUser>(options => options.Si
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+var kafkaConnectionString = builder.Configuration.GetConnectionString("kafka") ?? throw new ArgumentNullException("Need a kafka broker");
+
+builder.Services.AddCap(options =>
+{
+    options.UseKafka(kafkaConnectionString);
+    options.UsePostgreSql(dataConnectionString); // it uses an "outbox" pattern.
+    options.UseDashboard(); // just for class, but I think it's cool. 
+});
+
 
 var app = builder.Build();
 
