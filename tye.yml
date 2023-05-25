@@ -2,7 +2,7 @@
 name: msd
 services:
   - name: jobsapi
-    project: ./src/JobsSolution/JobsApi/JobsApi.csproj      
+    project: ./src/JobSolution/JobsApi/JobsApi.csproj      
     bindings:
       - port: 1337
   - name: job-listings-api
@@ -11,3 +11,5 @@ services:
       - port: 1338
   - name: mvc
     project: ./src/web/JobApplicationMvc/JobApplicationMvc/JobApplicationMvc.csproj
+  - name: hr-acl
+    project: ./src/hr/AclSolution/Acl/Acl.csproj

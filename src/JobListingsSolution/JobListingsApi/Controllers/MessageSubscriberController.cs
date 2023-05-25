@@ -14,10 +14,11 @@ public class MessageSubscriberController : ControllerBase
     private readonly ILogger<MessageSubscriberController> _logger;
     private readonly IDocumentSession _session;
 
-    public MessageSubscriberController(ILogger<MessageSubscriberController> logger)
+    public MessageSubscriberController(ILogger<MessageSubscriberController> logger, IDocumentSession session)
     {
 
         _logger = logger;
+        _session = session;
     }
 
 

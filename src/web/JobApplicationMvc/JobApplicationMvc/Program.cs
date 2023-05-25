@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using JobApplicationMvc.Data;
 using JobApplicationMvc.Areas.Identity.Data;
+using JobApplicationMvc;
+using JobApplicationMvc.Adapters;
 
 var builder = WebApplication.CreateBuilder(args);
 var authConnectionString = builder.Configuration.GetConnectionString("Auth") ?? throw new InvalidOperationException("Connection string 'Auth' not found.");
@@ -13,17 +15,27 @@ builder.Services.AddDefaultIdentity<JobApplicationMvcUser>(options => options.Si
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
 var kafkaConnectionString = builder.Configuration.GetConnectionString("kafka") ?? throw new ArgumentNullException("Need a kafka broker");
+
+builder.Services.AddTransient<JobOpeningsSubscriber>();
 
 builder.Services.AddCap(options =>
 {
     options.UseKafka(kafkaConnectionString);
     options.UsePostgreSql(dataConnectionString); // it uses an "outbox" pattern.
-    options.UseDashboard(); // just for class, but I think it's cool. 
+    options.UseDashboard(); // just for class, but I think it's cool. 
 });
 
-
+var jobsApiUrl = builder.Configuration.GetValue<string>("jobs-api-url") ?? throw new ArgumentNullException("Needs a Jobs API Url");
+builder.Services.AddHttpClient<JobsApiAdapter>((client) =>
+{
+    client.BaseAddress = new Uri(jobsApiUrl);
+});
+var jobsOpeningsApiUrl = builder.Configuration.GetValue<string>("jobs-openings-api-url") ?? throw new ArgumentNullException("Needs a Jobs API Url");
+builder.Services.AddHttpClient<JobOpeningsApiAdapter>((client) =>
+{
+    client.BaseAddress = new Uri(jobsOpeningsApiUrl);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

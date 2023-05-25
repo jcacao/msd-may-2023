@@ -19,7 +19,7 @@ public class JobsController : ControllerBase
         return StatusCode(201, response);
     }
 
-    [HttpGet("jobs")]
+    [HttpGet]
     public async Task<ActionResult> GetAllJobs()
     {
         CollectionResponse<JobItemModel> response = await _jobManager.GetAllCurrentJobsAsync();

@@ -16,10 +16,11 @@ public class JobListingsController : ControllerBase
 
     private readonly ICapPublisher _publisher;
     private readonly IDocumentSession _documentSession;
-    public JobListingsController(IDocumentSession documentSession)
+    public JobListingsController(IDocumentSession documentSession, ICapPublisher publisher)
     {
 
         _documentSession = documentSession;
+        _publisher = publisher;
     }
 
     [HttpPost("/job-listings/{slug}/openings")]
